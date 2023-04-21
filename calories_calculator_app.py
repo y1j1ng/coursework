@@ -9,6 +9,7 @@ SEMESTER: Spring 2023
 from typing import List, Tuple, Dict
 import itertools
 
+
 def get_info() -> Tuple[str, float]:
     """
     Gets personal information from the user.
@@ -23,35 +24,35 @@ def get_info() -> Tuple[str, float]:
     Return:
         Tuple[str, int, float, float]
     """
-    gender = check_gender(input("What is your sex (female / male)? "))
+    sex = check_sex(input("What is your sex (female / male)? "))
     age = check_age(input("What is your age? "))
     height = check_height(input("What is your height (cm)? "))
     weight = check_weight(input("What is your weight (kg)? "))
-    return gender, age, height, weight
+    return sex, age, height, weight
 
 
-def check_gender(gender: str) -> str:
+def check_sex(sex: str) -> str:
     """
     Checks whether the input is valid.
 
     For Example:
-    >>> check_gender("F")
+    >>> check_sex("F")
         Must be female or male.
         What is your sex (female / male)?   female
     >>> "female"
 
     Args:
-        gender (str)
+        sex (str)
 
     Return:
         str
     """
-    gender = gender.strip()
-    while gender != "female" and gender != "male":
+    sex = sex.strip()
+    while sex != "female" and sex != "male":
         print("Must be female or male.")
-        gender = input("What is your sex (female / male)? ")
-        gender = gender.strip()
-    return gender
+        sex = input("What is your sex (female / male)? ")
+        sex = sex.strip()
+    return sex
 
 
 def check_age(age: str) -> int:
@@ -73,7 +74,7 @@ def check_age(age: str) -> int:
     age = age.strip()
     try:
         age = int(age)
-        while age > 120 or age < 0:
+        while age > 120 or age < 0:  # based on the record of the longest-lived person
             print("Must be in the range of 0 - 120.")
             age = input("What is your age? ")
             age = int(age.strip())
@@ -103,7 +104,7 @@ def check_height(height: str) -> float:
     height = height.strip()
     try:
         height = float(height)
-        while height > 260 or height < 0:
+        while height > 260 or height < 0:  # based on the record of the highest person
             print("Must be in the range of 0 - 260.")
             height = input("What is your height? ")
             height = float(height.strip())
@@ -122,7 +123,7 @@ def check_weight(weight: str) -> float:
     >>> check_weight(' f ')
         Please enter a valid number.
         What is your weight? 541
-        Must be in the range of 0 - 541.
+        Must be in the range of 0 - 540.
         What is your weight?   540
     >>> 540.0
 
@@ -135,7 +136,7 @@ def check_weight(weight: str) -> float:
     weight = weight.strip()
     try:
         weight = float(weight)
-        while weight > 540 or weight < 0:
+        while weight > 540 or weight < 0:  # based on the record of the heaviest person
             print("Must be in the range of 0 - 540.")
             weight = input("What is your weight? ")
             weight = float(weight.strip())
@@ -151,14 +152,14 @@ def calculate_bmr(info: Tuple[str, float, float, float]) -> int:
     Calculates the BMR based on the Mifflin-St Jeor formula.
     Round the result to integer.
     BMR = 9.99 * weight + 6.25 * height - 4.92 * age
-    + (166 * gender (male = 1, female = 0) - 161)
+    + (166 * sex (male = 1, female = 0) - 161)
 
     For Example:
     >>> calculate_bmr(("male", 21, 180.0, 70.0))
         1726
 
     Args:
-        info (tuple): the tuple that contains gender, age, height and weight.
+        info (tuple): the tuple that contains sex, age, height and weight.
 
     Return:
         int
@@ -215,6 +216,7 @@ def load_food(filename: str) -> Dict[int, str]:
     for line in file:
         position = line.find(",")
         foods[int(line[:position])] = line[position + 1:].strip()
+    file.close()
     return foods
 
 
@@ -257,11 +259,11 @@ def recipe(bmr: int, foods: Dict[int, str]) -> Tuple:
         Tuple
     """
     calories = foods.keys()
-    abs_min = sum(calories)
+    abs_min = sum(calories)  # Set the initial value to the sum of all the foods
     for i in range(len(foods)):
-        groups = itertools.combinations(calories, i+1)
+        groups = itertools.combinations(calories, i+1)  # Return all subsets of length i+1 in calories
         for group in groups:
-            if abs(sum(group) - bmr) < abs_min:
+            if abs(sum(group) - bmr) < abs_min:  # Compare the absolute value and abs_min
                 abs_min = abs(sum(group) - bmr)
                 result = group
     recipe = []
