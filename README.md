@@ -24,7 +24,7 @@ http://www.totalcare.hk/healthy_diet/healthy_diet-article/calorie-table-eat-food
 
 
 ## 5. Give advice about the food plan
-Based on the calories and foods in the given file, the application will generate a food plan with the total calories closest to BMR.
+Based on the calories and foods in the given file, the application will generate a food plan with the total calories closest to BMR. Here, I learnt about itertools.
 
 ```python
 def recipe(bmr: int, foods: Dict[int, str]) -> Tuple:
